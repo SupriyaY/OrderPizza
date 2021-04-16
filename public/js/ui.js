@@ -1,8 +1,11 @@
 // URL mapping, from hash to a function that responds to that URL action
 const router = {
     "/": () => showContent("content-home"),
+    "/login": () => login(),
     "/profile": () =>
         requireAuth(() => showContent("content-profile"), "/profile"),
+    "/external-api": () =>
+        requireAuth(() => showContent("content-external-api"), "/external-api"),
     "/login": () => login()
 };
 
@@ -49,6 +52,7 @@ const isRouteLink = (element) =>
  * @param {*} id The id of the content to show
  */
 const showContent = (id) => {
+    eachElement(".reset-on-nav", (e) => e.classList.remove("show"));
     eachElement(".page", (p) => p.classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
 };
@@ -80,7 +84,6 @@ const updateUI = async() => {
             eachElement(".auth-invisible", (e) => e.classList.remove("hidden"));
             eachElement(".auth-visible", (e) => e.classList.add("hidden"));
         }
-
     } catch (err) {
         console.log("Error updating UI!", err);
         return;

@@ -1,24 +1,21 @@
 const express = require("express");
-const { join } = require("path");
 const morgan = require("morgan");
 const helmet = require("helmet");
-const app = express();
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
+const { join } = require("path");
 const authConfig = require("./auth_config.json");
+
+const app = express();
+
+if (!authConfig.domain || !authConfig.audience) {
+    throw "Please make sure that auth_config.json is in place and populated";
+}
 
 app.use(morgan("dev"));
 app.use(helmet());
-// Serve static assets from the public folder
 app.use(express.static(join(__dirname, "public")));
 
-// This is the endpoint to serve the configuration files 
-app.get("/auth_config.json", (req, res) => {
-    res.sendFile(join(__dirname, "auth_config.json"));
-});
-
-
-// JWT validation middleware
 const checkJwt = jwt({
     secret: jwksRsa.expressJwtSecret({
         cache: true,
@@ -32,21 +29,20 @@ const checkJwt = jwt({
     algorithms: ["RS256"]
 });
 
-// Create an endpoint that uses the middleware to protect this route from unthorized requests
 app.get("/api/external", checkJwt, (req, res) => {
     res.send({
         msg: "Your access token was successfully validated!"
     });
 });
 
+app.get("/auth_config.json", (req, res) => {
+    res.sendFile(join(__dirname, "auth_config.json"));
+});
 
-// Serve the index page for all other requests
-app.get("/*", (_, res) => {
+app.get("/*", (req, res) => {
     res.sendFile(join(__dirname, "index.html"));
 });
 
-
-// Error handling
 app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {
         return res.status(401).send({ msg: "Invalid token" });

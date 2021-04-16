@@ -42,8 +42,7 @@ const logout = () => {
 const fetchAuthConfig = () => fetch("/auth_config.json");
 
 /**
- * Initializes the Auth0 client, uses fetchAuthConfig to download the configuration file and 
- * initialize the auth0 variable
+ * Initializes the Auth0 client
  */
 const configureClient = async() => {
     const response = await fetchAuthConfig();
@@ -55,9 +54,6 @@ const configureClient = async() => {
         audience: config.audience
     });
 };
-
-// Call will populate the in-memory cache with a valid access token and user profile
-// if someone has already authenticated and that session is still valid
 
 /**
  * Checks to see if the user is authenticated. If so, `fn` is executed. Otherwise, the user
@@ -74,35 +70,31 @@ const requireAuth = async(fn, targetUrl) => {
     return login(targetUrl);
 };
 
-
+/**
+ * Calls the API endpoint with an authorization token
+ */
 const callApi = async() => {
     try {
-
-        // Get the access token from the Auth0 client
         const token = await auth0.getTokenSilently();
 
-        // Make the call to the API, setting the token
-        // in the Authorization header
         const response = await fetch("/api/external", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-
-        // Fetch the JSON result
+        console.log(localStorage.getItem('access_token'));
         const responseData = await response.json();
-
-        // Display the result in the output element
         const responseElement = document.getElementById("api-call-result");
 
         responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
+        document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+
+        eachElement(".result-block", (c) => c.classList.add("show"));
     } catch (e) {
-        // Display errors in the console
         console.error(e);
     }
 };
-
 
 // Will run when page finishes loading
 window.onload = async() => {
@@ -125,7 +117,6 @@ window.onload = async() => {
                 e.preventDefault();
                 window.history.pushState({ url }, {}, url);
             }
-
         } else if (e.target.getAttribute("id") === "call-api") {
             e.preventDefault();
             callApi();
@@ -165,14 +156,3 @@ window.onload = async() => {
 
     updateUI();
 };
-
-// const updateUI = async() => {
-//     const isAuthenticated = await auth0.isAuthenticated();
-
-//     document.getElementById("btn-logout").disabled = !isAuthenticated;
-//     document.getElementById("btn-login").disabled = isAuthenticated;
-
-
-//     // NEW - enable the button to call the API
-//     document.getElementById("btn-call-api").disabled = !isAuthenticated;
-// };
