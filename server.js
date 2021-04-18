@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const { join } = require("path");
+const jwtAuthz = require('express-jwt-authz')
 const authConfig = require("./auth_config.json");
 
 const app = express();
@@ -29,10 +30,16 @@ const checkJwt = jwt({
     algorithms: ["RS256"]
 });
 
-app.get("/api/external", checkJwt, (req, res) => {
-    res.send({
-        msg: "Your access token was successfully validated!"
-    });
+// app.get("/api/public", checkJwt, (req, res) => {
+//     res.send({
+//         msg: "Your access token was successfully validated!"
+//     });
+// });
+
+const checkScopes = jwtAuthz(['read:todos']);
+
+app.get('/api/private', checkJwt, checkScopes, function(req, res) {
+    res.json({ message: "Hello from a private endpoint! You need to be authenticated" });
 });
 
 app.get("/auth_config.json", (req, res) => {
@@ -43,6 +50,7 @@ app.get("/*", (req, res) => {
     res.sendFile(join(__dirname, "index.html"));
 });
 
+
 app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {
         return res.status(401).send({ msg: "Invalid token" });
@@ -50,6 +58,8 @@ app.use(function(err, req, res, next) {
 
     next(err, req, res);
 });
+
+
 
 process.on("SIGINT", function() {
     process.exit();

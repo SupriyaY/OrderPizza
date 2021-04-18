@@ -36,6 +36,8 @@ const logout = () => {
     }
 };
 
+
+
 /**
  * Retrieves the auth configuration from the server
  */
@@ -51,9 +53,23 @@ const configureClient = async() => {
     auth0 = await createAuth0Client({
         domain: config.domain,
         client_id: config.clientId,
-        audience: config.audience
+        audience: config.audience,
+        // responseType: 'token id_token',
+        // scope: 'openid profile email'
+        cacheLocation: 'localstorage'
+
     });
 };
+
+
+// function emailVerification(user, context, callback) {
+//     if (!user.email_verified) {
+//         return callback(new UnauthorizedError('Please verify your email before logging in.'));
+//     } else {
+//         return callback(null, user, context);
+//     }
+// }
+
 
 /**
  * Checks to see if the user is authenticated. If so, `fn` is executed. Otherwise, the user
@@ -73,28 +89,49 @@ const requireAuth = async(fn, targetUrl) => {
 /**
  * Calls the API endpoint with an authorization token
  */
-const callApi = async() => {
-    try {
-        const token = await auth0.getTokenSilently();
+// const callApi = async() => {
+//     try {
+//         const token = await auth0.getTokenSilently();
 
-        const response = await fetch("/api/external", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        console.log(localStorage.getItem('access_token'));
-        const responseData = await response.json();
-        const responseElement = document.getElementById("api-call-result");
+//         const response = await fetch("https://jsonplaceholder.typicode.com/todos/1", {
+//             headers: {
+//                 Authorization: `Bearer ${token}`
+//             }
+//         });
+//         const responseData = await response.json();
+//         const responseElement = document.getElementById("api-call-result");
+//         console.log(localStorage.getItem('access_token'));
 
-        responseElement.innerText = JSON.stringify(responseData, {}, 2);
+//         responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
-        document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+//         document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
 
-        eachElement(".result-block", (c) => c.classList.add("show"));
-    } catch (e) {
-        console.error(e);
-    }
-};
+//         eachElement(".result-block", (c) => c.classList.add("show"));
+//     } catch (e) {
+//         console.error(e);
+//     }
+// };
+
+
+document.getElementById('callApi').addEventListener('click', async() => {
+    const accessToken = await auth0.getTokenSilently();
+    const result = await fetch('https://jsonplaceholder.typicode.com/todos/1', {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + accessToken
+        }
+    });
+    const data = await result.json();
+    console.log(data);
+    console.log(localStorage.getItem('access_token'));
+
+});
+
+
+
+
+
+
 
 // Will run when page finishes loading
 window.onload = async() => {
