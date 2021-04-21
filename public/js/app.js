@@ -54,8 +54,8 @@ const configureClient = async() => {
         domain: config.domain,
         client_id: config.clientId,
         audience: config.audience,
-        // responseType: 'token id_token',
-        // scope: 'openid profile email'
+        responseType: 'token id_token',
+        scope: 'openid profile email',
         cacheLocation: 'localstorage'
 
     });
@@ -126,11 +126,6 @@ document.getElementById('callApi').addEventListener('click', async() => {
     console.log(localStorage.getItem('access_token'));
 
 });
-
-
-
-
-
 
 
 // Will run when page finishes loading

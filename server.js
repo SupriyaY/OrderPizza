@@ -7,6 +7,7 @@ const { join } = require("path");
 const jwtAuthz = require('express-jwt-authz')
 const authConfig = require("./auth_config.json");
 
+
 const app = express();
 
 if (!authConfig.domain || !authConfig.audience) {
@@ -30,17 +31,22 @@ const checkJwt = jwt({
     algorithms: ["RS256"]
 });
 
-// app.get("/api/public", checkJwt, (req, res) => {
-//     res.send({
-//         msg: "Your access token was successfully validated!"
-//     });
-// });
 
-const checkScopes = jwtAuthz(['read:todos']);
+// const checkScopes = jwtAuthz(['read:todos']);
 
-app.get('/api/private', checkJwt, checkScopes, function(req, res) {
+app.get('/api/private', checkJwt, function(req, res) {
     res.json({ message: "Hello from a private endpoint! You need to be authenticated" });
 });
+
+
+const checkScopes = jwtAuthz(['read:messages']);
+
+app.get('/api/private', checkJwt, checkScopes, function(req, res) {
+    res.json({
+        message: 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'
+    });
+});
+
 
 app.get("/auth_config.json", (req, res) => {
     res.sendFile(join(__dirname, "auth_config.json"));
