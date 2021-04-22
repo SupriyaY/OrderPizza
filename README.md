@@ -39,7 +39,7 @@ $ npm run dev
 
 ### What I learned and completed
 
-I was able to loging, logout, reteive the access token upon calling the API.  I ran into an a cors error I was unable to fix.  Also, I did not deploy to heroku.  My biggest issue was the time I was able to give to succesfully completing this the way I had intended.
+I was able to login, logout, and retreive the access token upon calling the API.  My process was to understand login/logout first, and then calling the api. I used the code that was available for the auth0 documetation.  I tested the API and it worked correctly. I ran into an a cors error that I was unable to fix. Also, I did not deploy to heroku.  My biggest issue was the time I was able to give to succesfully completing this the way I had intended.  
 
 
 

@@ -55,20 +55,21 @@ const configureClient = async() => {
         client_id: config.clientId,
         audience: config.audience,
         responseType: 'token id_token',
-        scope: 'openid profile email',
+        scope: 'openid profile email email_verified',
         cacheLocation: 'localstorage'
 
     });
 };
 
 //Force email Verification
-// function emailVerification(user, context, callback) {
-//     if (!user.email_verified) {
-//         return callback(new UnauthorizedError('Please verify your email before logging in.'));
-//     } else {
-//         return callback(null, user, context);
-//     }
-// }
+function emailVerification(user, context, callback) {
+    if (!user.email_verified) {
+        return callback(new UnauthorizedError('Please verify your email before logging in.'));
+    } else {
+        return callback(null, user, context);
+    }
+};
+
 
 
 /**
