@@ -35,6 +35,14 @@ This version of the application uses an [Express](https://expressjs.com) server 
 $ npm run dev
 ```
 
+
+
+### What I learned and completed
+
+I was able to loging, logout, reteive the access token upon calling the API.  I ran into an a cors error I was unable to fix.  Also, I did not deploy to heroku.  My biggest issue was the time I was able to give to succesfully completing this the way I had intended.
+
+
+
 ## Frequently Asked Questions
 
 We are compiling a list of questions and answers regarding the new JavaScript SDK - if you're having issues running the sample applications, [check the FAQ](https://github.com/auth0/auth0-spa-js/blob/master/FAQ.md)!

@@ -18,3 +18,13 @@ label {
 .result-block-container .result-block.show {
     opacity: 1;
 }
+
+div#main-content.container.mt-5.flex-grow-1 {
+    width: 100%;
+    height: 450px;
+    background: url('/Users/supriyayerramilli/Desktop/01-login/images/.pizzashop.jpg.icloud');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}

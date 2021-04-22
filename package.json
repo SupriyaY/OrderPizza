@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "@auth0/auth0-spa-js": "^1.14.0",
+        "cors": "^2.8.5",
         "express": "^4.17.1",
         "express-jwt": "^6.0.0",
         "express-jwt-authz": "^2.4.1",

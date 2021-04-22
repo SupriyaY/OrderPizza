@@ -44,7 +44,7 @@ const logout = () => {
 const fetchAuthConfig = () => fetch("/auth_config.json");
 
 /**
- * Initializes the Auth0 client
+ * Initializes the Auth0 client and addng user information
  */
 const configureClient = async() => {
     const response = await fetchAuthConfig();
@@ -61,7 +61,7 @@ const configureClient = async() => {
     });
 };
 
-
+//Force email Verification
 // function emailVerification(user, context, callback) {
 //     if (!user.email_verified) {
 //         return callback(new UnauthorizedError('Please verify your email before logging in.'));
@@ -89,30 +89,8 @@ const requireAuth = async(fn, targetUrl) => {
 /**
  * Calls the API endpoint with an authorization token
  */
-// const callApi = async() => {
-//     try {
-//         const token = await auth0.getTokenSilently();
 
-//         const response = await fetch("https://jsonplaceholder.typicode.com/todos/1", {
-//             headers: {
-//                 Authorization: `Bearer ${token}`
-//             }
-//         });
-//         const responseData = await response.json();
-//         const responseElement = document.getElementById("api-call-result");
-//         console.log(localStorage.getItem('access_token'));
-
-//         responseElement.innerText = JSON.stringify(responseData, {}, 2);
-
-//         document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
-
-//         eachElement(".result-block", (c) => c.classList.add("show"));
-//     } catch (e) {
-//         console.error(e);
-//     }
-// };
-
-
+//API call
 document.getElementById('callApi').addEventListener('click', async() => {
     const accessToken = await auth0.getTokenSilently();
     const result = await fetch('https://jsonplaceholder.typicode.com/todos/1', {
